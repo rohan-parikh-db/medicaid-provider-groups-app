@@ -5,7 +5,7 @@
  * All SQL goes through server/sql.ts, which uses @databricks/sdk-experimental.
  */
 
-import type { Application, Request, Response } from 'express';
+import type { Application } from 'express';
 import { randomUUID } from 'node:crypto';
 import { TABLE } from './config';
 import { executeSql, SqlParam, SqlRow } from './sql';
