@@ -15,10 +15,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-          cache: 'npm'
 
       - name: Install dependencies
-        run: npm ci --no-audit --no-fund
+        # Use `npm install` (not `npm ci`) because the repo intentionally ships
+        # without a `package-lock.json` — the Databricks Apps runtime generates
+        # one at deploy time. Committing a lockfile would just duplicate that.
+        run: npm install --no-audit --no-fund
 
       - name: TypeScript type check
         run: npm run typecheck || npx tsc -b --noEmit
