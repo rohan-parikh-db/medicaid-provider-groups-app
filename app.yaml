@@ -1,0 +1,28 @@
+# Databricks App startup manifest (AppKit / Node.js stack).
+# ---------------------------------------------------------------------------
+# The `sh -c` wrapper does install + build + start in one go on first deploy:
+#   1. If node_modules/ doesn't exist, run `npm ci` to install deps.
+#   2. If dist/ doesn't exist, run `npm run build` (tsdown + vite).
+#   3. Run `npm run start` — which is `node ./dist/server.js`.
+#
+# Subsequent restarts reuse the container's cache and start instantly.
+# ---------------------------------------------------------------------------
+
+command:
+  - "sh"
+  - "-c"
+  - "set -e; (test -d node_modules || npm ci --no-audit --no-fund) && (test -d dist || npm run build) && npm run start"
+
+env:
+  # SQL warehouse ID the app uses for all reads/writes.
+  # Workspace UI -> SQL Warehouses -> (your warehouse) -> ID in the URL.
+  - name: DATABRICKS_WAREHOUSE_ID
+    value: "REPLACE_WITH_YOUR_WAREHOUSE_ID"
+
+  # Unity Catalog coordinates for the backing Delta table.
+  - name: APP_CATALOG
+    value: "REPLACE_WITH_YOUR_CATALOG"
+  - name: APP_SCHEMA
+    value: "REPLACE_WITH_YOUR_SCHEMA"
+  - name: APP_TABLE
+    value: "provider_groups"
